@@ -1,19 +1,19 @@
 CC = gcc
 SRCDIR = src
 IDIR = include
-CFLAGS = -I$(IDIR) -Wall
+CFLAGS = -I$(IDIR) -Wall -lm -fopenmp
 ODIR = obj
 LDIR = lib
 BDIR = bin
 EXENAME = app.exe
 
-_DEPS = # List Header Files
+_DEPS = mytour.h sales.h
 DEPS = $(patsubst %, $(IDIR), $(_DEPS))
 
-_OBJ = # List desired Object files
+_OBJ = mytour.o sales.o
 OBJ = $(patsubst %, $(ODIR)/%, $(_OBJ))
 
-$(ODIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
+$(ODIR)/%.o: $(SRCDIR)/%.c $(DEPS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(BDIR)/$(EXENAME): $(OBJ)
