@@ -1,4 +1,4 @@
-#include "../include/mytour.h"
+#include "mytour.h"
 #include <omp.h>
 
 
@@ -17,11 +17,10 @@ void my_tour(const point cities[], int tour[], int ncities)
 		NTHR = omp_get_max_threads();
 		/* only execute this on the master thread! */
 		if (tid == 0) {
-	  		printf("%i : NCPU\t= %i\n",tid,NCPU);
-	  		printf("%i : NTHR\t= %i\n",tid,NTHR);
-	  		printf("%i : NPR\t= %i\n",tid,NPR);
+	  		printf("%i : NCPU = %i\n",tid,NCPU);
+	  		printf("%i : NTHR = %i\n",tid,NTHR);
+	  		printf("%i : NPR  = %i\n",tid,NPR);
 		}
-	printf("%i : hello multicore user! I am thread %i out of %i\n",tid,tid,NPR);
 	}
 	simple_find_tour(cities, tour, ncities);
 }

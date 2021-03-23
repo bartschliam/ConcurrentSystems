@@ -7,14 +7,13 @@
 #include "sales.h"
 #include "mytour.h"
 
-#define sqr(a) a * a // Change #1
 
-const int DEBUG = 1;
+const int DEBUG = 0;
 
-// float sqr(float x)
-// {
-//   return x*x;
-// }
+float sqr(float x)
+{
+  return x*x;
+}
 
 float dist(const point cities[], int i, int j) {
   return sqrt(sqr(cities[i].x-cities[j].x)+
@@ -24,13 +23,13 @@ float dist(const point cities[], int i, int j) {
 void simple_find_tour(const point cities[], int tour[], int ncities)
 {
   int i,j;
-  char *visited = calloc(ncities, 0); // Change #2
+  char *visited = alloca(ncities);
   int ThisPt, ClosePt=0;
   float CloseDist;
   int endtour=0;
   
-  // for (i=0; i<ncities; i++)
-  //   visited[i]=0;
+  for (i=0; i<ncities; i++)
+    visited[i]=0;
   ThisPt = ncities-1;
   visited[ncities-1] = 1;
   tour[endtour++] = ncities-1;
@@ -49,7 +48,6 @@ void simple_find_tour(const point cities[], int tour[], int ncities)
     visited[ClosePt] = 1;
     ThisPt = ClosePt;
   }
-  free(visited); // Change #3
 }
 
 /* write the tour out to console */
