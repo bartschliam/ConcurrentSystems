@@ -1,4 +1,4 @@
-#include "mytour.h"
+#include "../include/mytour.h"
 #include <omp.h>
 
 

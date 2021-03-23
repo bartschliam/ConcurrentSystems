@@ -4,8 +4,8 @@
 #include <float.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include "sales.h"
-#include "mytour.h"
+#include "../include/sales.h"
+#include "../include/mytour.h"
 
 const int DEBUG = 0;
 
