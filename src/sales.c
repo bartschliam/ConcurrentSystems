@@ -141,11 +141,17 @@ int main(int argc, char *argv[])
   initialize_cities(cities, ncities, seed);
 
   /* find tour through the cities */
-  gettimeofday(&start_time, NULL);
-  call_student_tour(cities,tour,ncities);
-  gettimeofday(&stop_time, NULL);
-  compute_time = (stop_time.tv_sec - start_time.tv_sec) * 1000000L +
-    (stop_time.tv_usec - start_time.tv_usec);
+  int run_times = 1000;
+  int average = 0;
+  for(int i = 0; i < run_times; i++){
+    gettimeofday(&start_time, NULL);
+    call_student_tour(cities,tour,ncities);
+    gettimeofday(&stop_time, NULL);
+    compute_time = (stop_time.tv_sec - start_time.tv_sec) * 1000000L +
+      (stop_time.tv_usec - start_time.tv_usec);
+    average = average + compute_time;
+  }
+  compute_time = average / run_times;
   printf("Time to find tour: %lld microseconds\n", compute_time);
 
   /* check that the tour we found is correct */
