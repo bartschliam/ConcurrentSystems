@@ -30,6 +30,7 @@ void my_tour(const point cities[], int tour[], int ncities)
 	int ThisPt, ClosePt = 0;
 	float CloseDist;
 	int endtour = 0;
+	#pragma omp parallel for
 	for (i = 0; i < ncities; i++){
     	visited[i] = 0;
 	}
