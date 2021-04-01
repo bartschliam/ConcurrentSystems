@@ -106,6 +106,7 @@ int check_tour(const point *cities, int * tour, int ncities)
   for ( i = 0; i < ncities; i++ ) {
     if ( tour[i] != tour2[i] ) {
       result = 0;
+      printf("Error at pos %d\n", i);
     }
   }
   free(tour2);
