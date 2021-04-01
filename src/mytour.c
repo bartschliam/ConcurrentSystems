@@ -31,7 +31,6 @@ void my_tour(const point cities[], int tour[], int ncities)
 	      		float dist = sqrt(sqr(x) + sqr(y));
 	        	dists[j] = dist;
 	      	}
-	      	else dists[j] = DBL_MAX;
 	    }
 
 	    #pragma omp parallel for
@@ -54,6 +53,7 @@ void my_tour(const point cities[], int tour[], int ncities)
 	    }
 	    tour[endtour++] = ClosePt;
 	    visited[ClosePt] = 1;
+	    dists[ClosePt] = DBL_MAX;
 	    ThisPt = ClosePt;
 	}
 	free(visited);
