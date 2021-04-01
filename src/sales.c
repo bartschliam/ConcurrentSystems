@@ -106,7 +106,7 @@ int check_tour(const point *cities, int * tour, int ncities)
   for ( i = 0; i < ncities; i++ ) {
     if ( tour[i] != tour2[i] ) {
       result = 0;
-      printf("Error at pos %d\n", i);
+      // printf("Error at pos %d\n", i);
     }
   }
   free(tour2);
@@ -142,11 +142,12 @@ int main(int argc, char *argv[])
   initialize_cities(cities, ncities, seed);
 
   /* find tour through the cities */
-  int run_times = 1000;
+  int run_times = 10;
   int average = 0;
-  for(int i = 0; i < run_times; i++){
+  for(i = 0; i < run_times; i++){
     gettimeofday(&start_time, NULL);
     call_student_tour(cities,tour,ncities);
+    //simple_find_tour(cities,tour,ncities);
     gettimeofday(&stop_time, NULL);
     compute_time = (stop_time.tv_sec - start_time.tv_sec) * 1000000L +
       (stop_time.tv_usec - start_time.tv_usec);

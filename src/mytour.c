@@ -3,7 +3,67 @@
 #include <math.h>
 #include <float.h>
 #include <stdlib.h>
-#define sqr(a) a * a
+#define sqr(a) (a) * (a)
+
+void my_tour(const point cities[], int tour[], int ncities)
+{
+	int i;
+  	char *visited = calloc(ncities, 1);
+  	float *dists = malloc(ncities * sizeof(float));
+  	int ThisPt, ClosePt = 0;
+  	float thisX, thisY, CloseDist;
+  	int endtour = 0;
+  	ThisPt = ncities - 1;
+  	visited[ncities - 1] = 1;
+  	tour[endtour++] = ncities - 1;
+  	int end = ncities - 1;
+  	int blockSize = end / omp_get_num_threads();
+	  
+	for (i = 1; i < ncities; i++) {
+	    thisX = cities[ThisPt].x;
+	    thisY = cities[ThisPt].y;
+	    CloseDist = DBL_MAX;
+	    #pragma omp parallel for
+	    for (int j = 0; j < end; j++) {
+	      	if (!visited[j]) {
+	      		float x = thisX - cities[j].x;
+	      		float y = thisY - cities[j].y;
+	      		float dist = sqrt(sqr(x) + sqr(y));
+	        	dists[j] = dist;
+	      	}
+	      	else dists[j] = DBL_MAX;
+	    }
+
+	    #pragma omp parallel for
+	    for (int j = 0; j < end; j += blockSize) {
+	    	float localMin = DBL_MAX;
+	    	int lowestJ;
+	    	for (int k = j; k < blockSize && k < end; k++) {
+	    		if (dists[k] < localMin) {
+	    			localMin = dists[k];
+	    			lowestJ = k;
+	    		}
+	    	}
+	    	#pragma omp critical
+	    	{
+		    	if (localMin < CloseDist) {
+		    		CloseDist = localMin;
+		    		ClosePt = lowestJ;
+		    	}
+	    	}
+	    }
+	    tour[endtour++] = ClosePt;
+	    visited[ClosePt] = 1;
+	    ThisPt = ClosePt;
+	}
+	free(visited);
+	free(dists);
+}
+
+/*
+
+	Single Thread Optimised
+	Just Remove the pragmas - some parts can be further optimised
 
 void my_tour(const point cities[], int tour[], int ncities)
 {
@@ -50,3 +110,5 @@ void my_tour(const point cities[], int tour[], int ncities)
 	    ThisPt = ClosePt;
 	}
 }
+
+*/
