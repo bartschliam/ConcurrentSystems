@@ -17,7 +17,7 @@ void my_tour(const point cities[], int tour[], int ncities)
   	visited[ncities - 1] = 1;
   	tour[endtour++] = ncities - 1;
   	int end = ncities - 1;
-	  
+
 	for (i = 1; i < ncities; i++) {
 	    thisX = cities[ThisPt].x;
 	    thisY = cities[ThisPt].y;
@@ -27,8 +27,7 @@ void my_tour(const point cities[], int tour[], int ncities)
 	      	if (!visited[j]) {
 	      		float x = thisX - cities[j].x;
 	      		float y = thisY - cities[j].y;
-	      		float dist = sqrt(sqr(x) + sqr(y));
-	        	dists[j] = dist;
+	        	dists[j] = sqrt(sqr(x) + sqr(y));
 	      	}
 	    }
 	    #pragma omp parallel
@@ -37,6 +36,7 @@ void my_tour(const point cities[], int tour[], int ncities)
 		    int lowestJ = end;
 		    #pragma omp for nowait
 		    for (j = 0; j < end; j++) {
+		    	printf("%d\n", omp_get_thread_num());
 	    		if (dists[j] < localMin) {
 	    			localMin = dists[j];
 	    			lowestJ = j;
