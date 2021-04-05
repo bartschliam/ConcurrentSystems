@@ -21,6 +21,15 @@ $(BDIR)/$(EXENAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ -L$(LDIR) $(LIBS)
 
 .PHONY: clean
+.PHONY: test
 
 clean:
 	rm -f $(ODIR)/*.o $(BDIR)/$(EXENAME)
+
+test:
+	./$(BDIR)/$(EXENAME) 10
+	./$(BDIR)/$(EXENAME) 50
+	./$(BDIR)/$(EXENAME) 100
+	./$(BDIR)/$(EXENAME) 1000
+	./$(BDIR)/$(EXENAME) 10000
+	./$(BDIR)/$(EXENAME) 100000
