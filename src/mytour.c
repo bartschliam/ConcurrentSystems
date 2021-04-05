@@ -7,7 +7,7 @@
 
 void my_tour(const point cities[], int tour[], int ncities)
 {
-	int i;
+	int i, j;
   	char *visited = calloc(ncities, 1);
   	float *dists = malloc(ncities * sizeof(float));
   	int ThisPt, ClosePt = 0;
@@ -17,14 +17,13 @@ void my_tour(const point cities[], int tour[], int ncities)
   	visited[ncities - 1] = 1;
   	tour[endtour++] = ncities - 1;
   	int end = ncities - 1;
-  	int blockSize = end / omp_get_num_threads();
 	  
 	for (i = 1; i < ncities; i++) {
 	    thisX = cities[ThisPt].x;
 	    thisY = cities[ThisPt].y;
 	    CloseDist = DBL_MAX;
 	    #pragma omp parallel for
-	    for (int j = 0; j < end; j++) {
+	    for (j = 0; j < end; j++) {
 	      	if (!visited[j]) {
 	      		float x = thisX - cities[j].x;
 	      		float y = thisY - cities[j].y;
@@ -32,17 +31,17 @@ void my_tour(const point cities[], int tour[], int ncities)
 	        	dists[j] = dist;
 	      	}
 	    }
-
-	    #pragma omp parallel for
-	    for (int j = 0; j < end; j += blockSize) {
+	    #pragma omp parallel
+	    {
 	    	float localMin = DBL_MAX;
-	    	int lowestJ;
-	    	for (int k = j; k < blockSize && k < end; k++) {
-	    		if (dists[k] < localMin) {
-	    			localMin = dists[k];
-	    			lowestJ = k;
+		    int lowestJ = end;
+		    #pragma omp for nowait
+		    for (j = 0; j < end; j++) {
+	    		if (dists[j] < localMin) {
+	    			localMin = dists[j];
+	    			lowestJ = j;
 	    		}
-	    	}
+		    }
 	    	#pragma omp critical
 	    	{
 		    	if (localMin < CloseDist) {
@@ -50,7 +49,7 @@ void my_tour(const point cities[], int tour[], int ncities)
 		    		ClosePt = lowestJ;
 		    	}
 	    	}
-	    }
+		}
 	    tour[endtour++] = ClosePt;
 	    visited[ClosePt] = 1;
 	    dists[ClosePt] = DBL_MAX;
