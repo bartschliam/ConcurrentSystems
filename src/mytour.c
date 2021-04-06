@@ -4,6 +4,7 @@
 #include <float.h>
 #include <stdlib.h>
 #define sqr(a) (a) * (a)
+#define MIN(a,b) (((a)<(b))?(a):(b))
 
 void my_tour(const point cities[], int tour[], int ncities)
 {
@@ -16,18 +17,18 @@ void my_tour(const point cities[], int tour[], int ncities)
   	visited[ncities - 1] = 1;
   	tour[endtour++] = ncities - 1;
   	int end = ncities - 1;
-
+	int numCores = MIN(round(cbrt(ncities)),64);
 	for (i = 1; i < ncities; i++) {
 	    thisX = cities[ThisPt].x;
 	    thisY = cities[ThisPt].y;
 	    CloseDist = DBL_MAX;
-	    #pragma omp parallel
+	    #pragma omp parallel num_threads(numCores)
 	    {
 	    	float localMin = DBL_MAX;
-		    int lowestJ = end;
-		    #pragma omp for nowait
-		    for (j = 0; j < end; j++) {
-		    	if (!visited[j]) {
+		int lowestJ = end;
+		#pragma omp for nowait
+		for (j = 0; j < end; j++) {
+			if (!visited[j]) {
 		      		float x = thisX - cities[j].x;
 		      		float y = thisY - cities[j].y;
 		      		float dist = sqrt(sqr(x) + sqr(y));
@@ -36,7 +37,7 @@ void my_tour(const point cities[], int tour[], int ncities)
 		    			lowestJ = j;
 		    		}
 	    		}
-		    }
+		}
 	    	#pragma omp critical
 	    	{
 		    	if (localMin < CloseDist) {
