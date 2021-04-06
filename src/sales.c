@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
   initialize_cities(cities, ncities, seed);
 
   /* find tour through the cities */
-  int run_times = 1;
+  int run_times = ceil((float)100000 / ncities);
   long long average = 0;
   for(i = 0; i < run_times; i++){
     gettimeofday(&start_time, NULL);
