@@ -1,4 +1,6 @@
 # ConcurrentSystems
+# Running
+Compile code using make, the project report is contained within the docs folder
 # Assignment Description
 CSU33014 Lab: The Travelling Salesperson
 
