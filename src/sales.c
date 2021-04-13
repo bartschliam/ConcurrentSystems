@@ -4,6 +4,7 @@
 #include <float.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <limits.h>
 #include "sales.h"
 #include "mytour.h"
 
@@ -92,6 +93,7 @@ void initialize_cities(point * cities, int ncities, unsigned seed)
   for (i=0; i<ncities; i++) {
     cities[i].x = ((float)(random()))/(float)(1U<<31);
     cities[i].y = ((float)(random()))/(float)(1U<<31);
+    cities[i].id = i;
   }
 }
 
@@ -104,9 +106,9 @@ int check_tour(const point *cities, int * tour, int ncities)
   simple_find_tour(cities,tour2,ncities);
 
   for ( i = 0; i < ncities; i++ ) {
+  	//printf("%d, expected %d\n", tour[i], tour2[i]);
     if ( tour[i] != tour2[i] ) {
       result = 0;
-      // printf("Error at pos %d\n", i);
     }
   }
   free(tour2);
@@ -118,44 +120,69 @@ void call_student_tour(const point *cities, int * tour, int ncities)
   my_tour(cities, tour, ncities);
 }
 
+/*
+int getMin(long long *arr, int len) {
+	int minI = 0;
+	long long min = LLONG_MAX;
+	for (int i = 0; i < len; i++) {
+		long long current = arr[i];
+		if (current < min) {
+			min = current;
+			minI = i;
+		}
+	}
+	return minI;
+}
+*/
+
 int main(int argc, char *argv[])
-{
-  int i, ncities;
+{ 
+  // Present also is commented out code that was used for testing purposes such as determining optimal thread count
+
+  int ncities;//, i;
   point *cities;
   int *tour;
   int seed;
   int tour_okay;
   struct timeval start_time, stop_time;
   long long compute_time;
-  
+  //int totalThreads = 64;
+  //long long *times;
 
   if (argc!=2) {
     fprintf(stderr, "usage: %s <ncities>\n", argv[0]);
     exit(1);
   }
-
+  
   /* initialize random set of cities */
+  //for (ncities = 10; ncities <= 100; ncities += 10) {
   ncities = atoi(argv[1]);
   cities = malloc(ncities*sizeof(point));
   tour = malloc(ncities*sizeof(int));
+  //times = malloc(totalThreads*sizeof(long long));
+  //for (int i = 0; i < totalThreads; i++) times[i] = LLONG_MAX;
   seed = 3656384L % ncities;
   initialize_cities(cities, ncities, seed);
 
   /* find tour through the cities */
-  int run_times = ceil((float)100000 / ncities);
-  long long average = 0;
-  for(i = 0; i < run_times; i++){
+  //int run_times = 1;//ceil((float)100000 / ncities);
+  //long long average = 0;
+  //for(int threadCount = 1; threadCount <= totalThreads; threadCount++){
     gettimeofday(&start_time, NULL);
+    //my_tour(cities, tour, ncities, threadCount);
     call_student_tour(cities,tour,ncities);
     //simple_find_tour(cities,tour,ncities);
     gettimeofday(&stop_time, NULL);
     compute_time = (stop_time.tv_sec - start_time.tv_sec) * 1000000L +
       (stop_time.tv_usec - start_time.tv_usec);
-    average += compute_time;
-  }
-  compute_time = average / run_times;
+    //times[threadCount - 1] = compute_time;
+    //average += compute_time;
+  //}
+  //int minI = getMin(times, totalThreads);
+  //printf("NCities %d: %d cores @ %lld microseconds\n", ncities, minI + 1, times[minI]);
+  //compute_time = average / run_times;
   printf("Time to find tour: %lld microseconds\n", compute_time);
-
+ 
   /* check that the tour we found is correct */
   tour_okay = check_tour(cities,tour,ncities);
   if ( !tour_okay ) {
@@ -170,5 +197,6 @@ int main(int argc, char *argv[])
 
   free(cities);
   free(tour);
+  //free(times);
   return 0;
 }

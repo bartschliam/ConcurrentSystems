@@ -7,7 +7,9 @@
 typedef struct {
   float x;
   float y;
+  int id;
 } point;
+
 
 void simple_find_tour(const point cities[], int tour[], int ncities);
 

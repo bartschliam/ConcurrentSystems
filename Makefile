@@ -22,6 +22,7 @@ $(BDIR)/$(EXENAME): $(OBJ)
 
 .PHONY: clean
 .PHONY: test
+.PHONY: petty
 
 clean:
 	rm -f $(ODIR)/*.o $(BDIR)/$(EXENAME)
