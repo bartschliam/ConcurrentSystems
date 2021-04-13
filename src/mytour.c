@@ -1,4 +1,3 @@
-
 #include "mytour.h"
 #include <omp.h>
 #include <math.h>
@@ -47,7 +46,7 @@ void my_tour(const point cities_arr[], int tour[], int ncities)
 		    		ClosePt = cities[lowestJ].id;
 		    		ThisPt = lowestJ;
 		    	}
-	    	}
+		    }
 		}
 		cities[ThisPt] = cities[--end];
 	    tour[endtour++] = ClosePt;
